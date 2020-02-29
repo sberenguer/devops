@@ -10,7 +10,7 @@ $(function(){
                 $("#source3_container").html(JSON.stringify(data)); 
                 
             },
-           error: function (jqXHR, status, errorThrown) { 
+            error: function (jqXHR, status, errorThrown) { 
                 $("#source3_container").html(errorThrown != null ? errorThrown : "error loading source 3 ");
               
                 console.log( "error loading source 3");  
