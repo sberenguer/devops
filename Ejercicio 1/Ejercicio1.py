@@ -10,12 +10,13 @@
 #menor que el número.
 
 def tipoDeNumero(lista):
-    print("Lista de números de entrada: "+str(lista))
+    print("Lista de números de entrada: " + str(lista))
     for numero in lista:
-        calculaTipoDeNumero(numero)
-       
+        calculaDivisoresYTipo(numero)
 
-def calculaTipoDeNumero(n):        
+# Funcion para obtener los divisores de un numero       
+# n: numero al que vamos a calcular sus divisores y determinar su tipo
+def calculaDivisoresYTipo(n):        
     if n == 0:
         print("El 0 no tiene divisores")
     else:
@@ -25,18 +26,19 @@ def calculaTipoDeNumero(n):
             if n%i == 0:
                 divisores.append(i)
                 sumatorio +=i
-
-        #print("Divisores propios de "+ str(n) + ": " + str(divisores))
         
         esPerfectoAbundanteODefectivo(n, sumatorio)
 
-#A partir de un numero        
-def esPerfectoAbundanteODefectivo(n, sumatorio):
-    if sumatorio == n:
-        print("El número "+ str(n) + " es perfecto")
+# Funcion para indicar si un numero es perfecto, defectivo o abundante
+# a partir de de sus divisores propios y excluyendose a si mismo
+# num: El numero  
+# sumaDivisores: sumatorio de los divisores propios de num
+def esPerfectoAbundanteODefectivo(num, sumaDivisores):
+    if sumaDivisores == num:
+        print("El número "+ str(num) + " es perfecto")
         
-    elif sumatorio < n:
-        print("El número "+ str(n) + " es defectivo")
+    elif sumaDivisores > num:
+        print("El número "+ str(num) + " es abundante")
 
     else:
-        print("El número "+ str(n) + " es abundante")
+        print("El número "+ str(num) + " es defectivo")
