@@ -1,4 +1,7 @@
-$(function () {
+$(function () { 
+    
+     var sourcesMap = new Map();
+    
     const s1 = [{
         "d":1435708800000,
         "cat":"cat 1",
@@ -52,18 +55,7 @@ $(function () {
         "raw": "thJP4b 2015-07-09 bDes w7iyahba RZ8ycJ55Q #CAT 4#",
         "val": 60
     }];
-
-    
-    
-    var result = [];
-    var sourcesMap = new Map();
-    
-    var sourceList1 = [];
-    var sourceList2 = [];
-    var sourceList3 = [];
-    var sourceList4 = [];
-    
-    
+ 
     const regExDate = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/;
     const regExCateg = /\#(.*?)\#/;
     //TODO doc
@@ -76,38 +68,19 @@ $(function () {
     function getCategoria(texto){
         return texto.match(regExCateg)[1];
     }
-    //TODO doc
-    function sortJsonArray(jsonArray){
-        return jsonArray.sort(function(a, b){
-            return a.date - b.date;
-        });
-    }
-      
+ 
     function readSourcesMap(){
          console.log(sourcesMap);
     }
     
-    function sortMapPerCat(){
-        console.log("vamos ordenar map");
-        
-        sourcesMap.forEach(function(value, key, map){
-           //console.log(key + ":" + value);
-       
-        sortJsonArray(value);
-        return true;
-       });
-        
-
-    }
-    
     function updateSourcesMap(date, cat, value){
-        console.log("ACTUALIZANDO MAP SOURCE");        
+       // console.log("ACTUALIZANDO MAP SOURCE");        
         if(!sourcesMap.has(cat)){
-            //console.log("Nueva key categoria, añadimos: " + cat );
+            console.log("Nueva key categoria, añadimos: " + cat );
             sourcesMap.set(cat, [{date:date, value:value}]);
         }//si la key ya existe, comprobamos si la fecha es nueva
         else{
-           // console.log("key '"+ cat+"' ya existe, actualizamos date + value ");
+            //console.log("key '"+ cat+"' ya existe, actualizamos date + value ");
             //recuperamos array de [{d,v}]
             var oldCategoryArray = sourcesMap.get(cat);
             var existeParDateValue = false;
@@ -117,7 +90,7 @@ $(function () {
                 var oldValue = oldCategoryArray[i].value;
                 //si la fecha existe en el array sumamos su value con el nuevo
                 if(oldDate == date){
-                    // console.log("Las fechas coinciden, actualizamos value");
+                   //  console.log("Las fechas coinciden, actualizamos value");
                     //actualizamos value
                     oldCategoryArray[i].value += value;
                     existeParDateValue = true;
@@ -140,73 +113,7 @@ $(function () {
         }
         
     }
-   
     
-    function loadSource1(callback){
-       
-        $.ajax({
-            url: 'http://s3.amazonaws.com/logtrust-static/test/test/data1.json',  
-            cache: true,
-            dataType: 'json',
-            success: function (data) {
-                 $("#source1_container").html(JSON.stringify(data)); 
-                callback(data);
-            },
-            error: function (jqXHR, status, errorThrown) {                
-                $("#source1_container").html(errorThrown != null ? errorThrown : "error loading source 1 ");
-                
-                console.log( "error loading source 1");  
-            }
-            
-        });
-        
-    } 
-    
-    function loadSource2(callback){ 
-        $.ajax({
-            url:'http://s3.amazonaws.com/logtrust-static/test/test/data2.json',  
-            type: 'GET',
-            cache: true,
-            dataType: 'json',
-            success: function (data) {
-                //$("#source2_container").html(JSON.stringify(data)); 
-                 callback(data);          
-            },
-            error: function (jqXHR, status, errorThrown) { 
-                $("#source2_container").html(errorThrown != null ? errorThrown : "error loading source 2 ");
-              
-                console.log( "error loading source 2");  
-            }
-        }).done(function(data){
-             console.log( "DONE AJAX 2");
-             
-            
-        }); 
-    } 
-    
-    function loadSource3(callback){ 
-        $.ajax({
-            url:'http://s3.amazonaws.com/logtrust-static/test/test/data3.json',  
-            type: 'GET',
-            cache: true,
-            dataType: 'json',
-            success: function (data) {
-                //$("#source3_container").html(JSON.stringify(data)); 
-                callback(data); 
-            },
-            error: function (jqXHR, status, errorThrown) { 
-                $("#source3_container").html(errorThrown != null ? errorThrown : "error loading source 3 ");
-              
-                console.log( "error loading source 3");  
-            }
-        }).done(function(data){
-             console.log( "DONE AJAX 3");
-            
-            
-        }); 
-    } 
-    
-
     function prepareDataSource1(data){
     
         console.log("calling prepareDataSource1");  
@@ -215,6 +122,18 @@ $(function () {
         var filteredList =[];
         
         for(var i = 0; i<data.length; i++){
+            
+            for(var key in Object.keys(data[i])){
+                console.log("leyendo keys");
+                  console.log("key ="+ key);
+                if(key === "d"){
+                    console.log("key = d");
+                    var otraDate = data[key];
+                }
+                if(data.key == "cat"){
+                    console.log("key = cat");
+                }
+            }
             //Fecha en milisegundos
             var dateMilli = data[i].d;
             //Categroria
@@ -245,6 +164,7 @@ $(function () {
         //return sortJsonArray(filteredList);
         return filteredList;
      }
+    
         
     function prepareDataSource2(data){
        
@@ -329,27 +249,84 @@ $(function () {
         return filteredList;
      }
     
+     function loadSource1(callback){
+       
+        $.ajax({
+            url: 'http://s3.amazonaws.com/logtrust-static/test/test/data1.json',  
+            cache: true,
+            dataType: 'json',
+            success: function (data) {
+                 $("#source1_container").html(JSON.stringify(data)); 
+                callback(data);
+            },
+            error: function (jqXHR, status, errorThrown) {                
+                $("#source1_container").html(errorThrown != null ? errorThrown : "error loading source 1 ");
+                
+                console.log( "error loading source 1");  
+            }
+            
+        });
+        
+    } 
+    
+    function loadSource2(callback){ 
+        $.ajax({
+            url:'http://s3.amazonaws.com/logtrust-static/test/test/data2.json',  
+            type: 'GET',
+            cache: true,
+            dataType: 'json',
+            success: function (data) {
+                //$("#source2_container").html(JSON.stringify(data)); 
+                 callback(data);          
+            },
+            error: function (jqXHR, status, errorThrown) { 
+                $("#source2_container").html(errorThrown != null ? errorThrown : "error loading source 2 ");
+              
+                console.log( "error loading source 2");  
+            }
+        }).done(function(data){
+             console.log( "DONE AJAX 2");
+             
+            
+        }); 
+    } 
+    
+    function loadSource3(callback){ 
+        $.ajax({
+            url:'http://s3.amazonaws.com/logtrust-static/test/test/data3.json',  
+            type: 'GET',
+            cache: true,
+            dataType: 'json',
+            success: function (data) {
+                //$("#source3_container").html(JSON.stringify(data)); 
+                callback(data); 
+            },
+            error: function (jqXHR, status, errorThrown) { 
+                $("#source3_container").html(errorThrown != null ? errorThrown : "error loading source 3 ");
+              
+                console.log( "error loading source 3");  
+            }
+        }).done(function(data){
+             console.log( "DONE AJAX 3");
+            
+            
+        }); 
+    } 
+     
+    
     loadSource1(function(output) {
-        sourceList1 = prepareDataSource1(output); 
+        var sourceList1 = prepareDataSource1(s1); 
         $("#source1_container").html(JSON.stringify(sourceList1)); 
          
     });
     
     loadSource2(function(output) {
-        sourceList2 = prepareDataSource2(output); 
+        var sourceList2 = prepareDataSource2(s2); 
          $("#source2_container").html(JSON.stringify(sourceList2));  
     });
     
     loadSource3(function(output) {
-        sourceList3 = prepareDataSource3(output); 
+        var sourceList3 = prepareDataSource3(s3); 
         $("#source3_container").html(JSON.stringify(sourceList3)); 
-        sortMapPerCat();
-
-        // pass it to the other module
-        lineChartHandler.func2(sourcesMap);
-
     });
-
-   
-     
 });
