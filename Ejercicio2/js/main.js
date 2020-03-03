@@ -1,60 +1,6 @@
 $(function () {
-    const s1 = [{
-        "d":1435708800000,
-        "cat":"cat 1",
-        "value":1
-    },{
-        "d":1433203200000,
-        "cat":"cat 1",
-        "value":80
-    },{
-        "d":1435708800000,
-        "cat":"cat 2",
-        "value":16.585326813220558
-    },{
-        "d":1436400000000,
-        "cat":"cat 3",
-        "value":5
-    },{
-        "d":1435708800000,
-        "cat":"cat 2",
-        "value":15
-    },{
-        "d":1436400000000,
-        "cat":"cat 4",
-        "value":10
-    }];
-    
-    const s2 = [{
-		"myDate": "2015-06-02",
-		"categ": "CAT 1",
-		"val": 40
-	},{
-		"myDate": "2015-06-15",
-		"categ": "CAT 1",
-		"val": 90
-	},{
-		"myDate": "2015-06-19",
-		"categ": "CAT 3",
-		"val": 11
-	}];
-    
-    const s3 = [{
-        "raw": "9OHbc9 O1 WHTxiBPa auwZIVD6 j8jMWWVH UdB6hy 2015-07-02 XF 5xhcx15DD sbYFRPn dyoH1OOIF 6meHw pANknwa2h T imhs24gR5 #CAT 1#",
-        "val": 40
-    },{
-        "raw": "YCcoeoNR8 T4VSBd0GC fpAepuTD 5A40zJ6 y5bXBb rRxM 2015-06-08 J KA9FicdV BSbvirf #CAT 2#",
-        "val": 70
-    },{
-        "raw": "thJP4b 2015-06-26 bDes w7iyahba RZ8ycJ55Q #CAT 2#",
-        "val": 60
-    },{
-        "raw": "thJP4b 2015-07-09 bDes w7iyahba RZ8ycJ55Q #CAT 4#",
-        "val": 60
-    }];
-
-    
-    
+    var months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+        
     var result = [];
     var sourcesMap = new Map();
     
@@ -79,7 +25,7 @@ $(function () {
     //TODO doc
     function sortJsonArray(jsonArray){
         return jsonArray.sort(function(a, b){
-            return a.date - b.date;
+            return a.x - b.x;
         });
     }
       
@@ -93,18 +39,32 @@ $(function () {
         sourcesMap.forEach(function(value, key, map){
            //console.log(key + ":" + value);
        
-        sortJsonArray(value);
-        return true;
+            sortJsonArray(value);
+            //return true;
        });
         
 
     }
     
+    function parseDate(date){
+      
+        var milliIntoDate = new Date(date); 
+        var day = milliIntoDate.getDate();
+        var month = months[milliIntoDate.getMonth()];
+        return day+"."+month;
+        
+    }
+    
     function updateSourcesMap(date, cat, value){
-        console.log("ACTUALIZANDO MAP SOURCE");        
+       // console.log("ACTUALIZANDO MAP SOURCE");  
+         
+         //console.log("convert milli "+date+" into date:" + parseDate(date));  
+        //convert millisencods into date
+        var newParseDate = parseDate(date);
+               
         if(!sourcesMap.has(cat)){
             //console.log("Nueva key categoria, añadimos: " + cat );
-            sourcesMap.set(cat, [{date:date, value:value}]);
+            sourcesMap.set(cat, [{label:newParseDate, x:date, y:value}]);
         }//si la key ya existe, comprobamos si la fecha es nueva
         else{
            // console.log("key '"+ cat+"' ya existe, actualizamos date + value ");
@@ -113,13 +73,13 @@ $(function () {
             var existeParDateValue = false;
             
             for(var i= 0; i < oldCategoryArray.length && !existeParDateValue; i++){
-                var oldDate = oldCategoryArray[i].date;
-                var oldValue = oldCategoryArray[i].value;
+                var oldDate = oldCategoryArray[i].x;
+                var oldValue = oldCategoryArray[i].y;
                 //si la fecha existe en el array sumamos su value con el nuevo
                 if(oldDate == date){
                     // console.log("Las fechas coinciden, actualizamos value");
                     //actualizamos value
-                    oldCategoryArray[i].value += value;
+                    oldCategoryArray[i].y += value;
                     existeParDateValue = true;
                     break;
                 }
@@ -131,8 +91,9 @@ $(function () {
                 var newArray = oldCategoryArray;
                 var newData = {};
 
-                newData["date"] = date;
-                newData["value"] = value;
+                newData["label"] = newParseDate; //date parsed
+                newData["x"] = date; //date in millis
+                newData["y"] = value;
 
                 oldCategoryArray.push(newData);
             }

@@ -1,13 +1,17 @@
 $(function () { 
-    
+     var months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
      var sourcesMap = new Map();
-    
+    /*
+    var dataPointsCat1 = [{label:"1.Jul", y:5},{label:"2.Jul", y:10},{label:"5.Jul", y:15},{label:"15.Jul", y:20},{label:"27.Jul", y:25}];
+    var dataPointsCat2 = [{label:"1.Jul", y:11},{label:"2.Jul", y:22},{label:"5.Jul", y:15},{label:"15.Jul", y:32},{label:"27.Jul", y:55}];
+     var dataPointsCat3 = [{label:"1.Jul", y:21},{label:"4.Jul", y:11},{label:"5.Jul", y:47},{label:"14.Jul", y:32},{label:"21.Jul", y:33}];
+    */
     const s1 = [{
         "d":1435708800000,
         "cat":"cat 1",
         "value":1
     },{
-        "d":1433203200000,
+        "d":1433203200000, //02-06-2015
         "cat":"cat 1",
         "value":80
     },{
@@ -40,6 +44,10 @@ $(function () {
 		"myDate": "2015-06-19",
 		"categ": "CAT 3",
 		"val": 11
+	},{
+		"myDate": "2015-06-19",
+		"categ": "CAT 4",
+		"val": 77
 	}];
     
     const s3 = [{
@@ -69,30 +77,64 @@ $(function () {
         return texto.match(regExCateg)[1];
     }
  
+       //TODO doc
+    function sortJsonArray(jsonArray){
+        return jsonArray.sort(function(a, b){
+            console.log(a.label + " vs " + b.label); 
+            return a.label - b.label;
+        });
+    }
+      
     function readSourcesMap(){
          console.log(sourcesMap);
     }
     
+    function sortMapPerCat(){
+        console.log("vamos ordenar map");
+        
+        sourcesMap.forEach(function(value, key, map){
+//           console.log(key + ":" + value);
+       
+            sortJsonArray(value);
+            //return true;
+       });
+        
+
+    }
+     function parseDate(date){
+      
+        var milliIntoDate = new Date(date); 
+        var day = milliIntoDate.getDate();
+        var month = months[milliIntoDate.getMonth()];
+        return day+"."+month;
+        
+    }
     function updateSourcesMap(date, cat, value){
-       // console.log("ACTUALIZANDO MAP SOURCE");        
+       // console.log("ACTUALIZANDO MAP SOURCE");  
+         
+         //console.log("convert milli "+date+" into date:" + parseDate(date));  
+        //convert millisencods into date
+       // var newDate = parseDate(date);
+        var newDate = date;
+        
         if(!sourcesMap.has(cat)){
-            console.log("Nueva key categoria, añadimos: " + cat );
-            sourcesMap.set(cat, [{date:date, value:value}]);
+            //console.log("Nueva key categoria, añadimos: " + cat );
+            sourcesMap.set(cat, [{label:newDate, y:value}]);
         }//si la key ya existe, comprobamos si la fecha es nueva
         else{
-            //console.log("key '"+ cat+"' ya existe, actualizamos date + value ");
+           // console.log("key '"+ cat+"' ya existe, actualizamos date + value ");
             //recuperamos array de [{d,v}]
             var oldCategoryArray = sourcesMap.get(cat);
             var existeParDateValue = false;
             
             for(var i= 0; i < oldCategoryArray.length && !existeParDateValue; i++){
-                var oldDate = oldCategoryArray[i].date;
-                var oldValue = oldCategoryArray[i].value;
+                var oldDate = oldCategoryArray[i].label;
+                var oldValue = oldCategoryArray[i].y;
                 //si la fecha existe en el array sumamos su value con el nuevo
                 if(oldDate == date){
-                   //  console.log("Las fechas coinciden, actualizamos value");
+                    // console.log("Las fechas coinciden, actualizamos value");
                     //actualizamos value
-                    oldCategoryArray[i].value += value;
+                    oldCategoryArray[i].y += value;
                     existeParDateValue = true;
                     break;
                 }
@@ -104,8 +146,8 @@ $(function () {
                 var newArray = oldCategoryArray;
                 var newData = {};
 
-                newData["date"] = date;
-                newData["value"] = value;
+                newData["label"] = newDate;
+                newData["y"] = value;
 
                 oldCategoryArray.push(newData);
             }
@@ -123,17 +165,6 @@ $(function () {
         
         for(var i = 0; i<data.length; i++){
             
-            for(var key in Object.keys(data[i])){
-                console.log("leyendo keys");
-                  console.log("key ="+ key);
-                if(key === "d"){
-                    console.log("key = d");
-                    var otraDate = data[key];
-                }
-                if(data.key == "cat"){
-                    console.log("key = cat");
-                }
-            }
             //Fecha en milisegundos
             var dateMilli = data[i].d;
             //Categroria
@@ -327,6 +358,10 @@ $(function () {
     
     loadSource3(function(output) {
         var sourceList3 = prepareDataSource3(s3); 
-        $("#source3_container").html(JSON.stringify(sourceList3)); 
+        $("#source3_container").html(JSON.stringify(sourceList3));
+        
+        sortMapPerCat();
+         // pass it to the other module
+        lineChartHandler.func2(sourcesMap);
     });
 });
