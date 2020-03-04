@@ -15,8 +15,8 @@ Ejercicio 2
 - JQuery
 
 2. Librerias externas:
-- jQuery 3.4.1
-- CanvasJS
+- jQuery 3.4.1: uso de las funciones y Ajax
+- CanvasJS: uso de graficos
  
 3. Planteamiento del problema
 
