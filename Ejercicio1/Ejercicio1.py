@@ -9,7 +9,7 @@
 #   Un número defectivo es aquel que la suma de los divisores propios es
 #menor que el número.
 
-def tipoDeNumero(lista):
+def getTipoDeNumeros(lista):
     print("Lista de números de entrada: " + str(lista))
     for numero in lista:
         calculaDivisoresYTipo(numero)
@@ -20,11 +20,9 @@ def calculaDivisoresYTipo(n):
     if n == 0:
         print("El 0 no tiene divisores")
     else:
-        divisores=[]
         sumatorio = 0
         for i in range(1, n):
             if n%i == 0:
-                divisores.append(i)
                 sumatorio +=i
         
         esPerfectoAbundanteODefectivo(n, sumatorio)
