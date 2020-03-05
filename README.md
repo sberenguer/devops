@@ -4,9 +4,11 @@ Ejercicio 1
 ############
 
 1. Entorno 
+
 El ejercicio se ha realizado con el IDLE de Python en versión 3.8.1
 
 2. Explicación de código
+
 El ejercicio consta de tres métodos, que se llaman en cadena:
 
 -getTipoDeNumeros: Es el método principal. Recorre la lista de números que recibe como parámetro y llama al método "calculaDivisoresYTipo" para cada uno de ellos.
@@ -16,12 +18,15 @@ El ejercicio consta de tres métodos, que se llaman en cadena:
 -esPerfectoAbundanteODefectivo: En este se método se realizan unas comparaciones simples del valor de N y el sumatorio de sus divisores, imprimiendo por pantalla un mensaje indicando el tipo de número que es (perfecto, abundante o defectivo)
 
 3. Instrucciones de uso
+
 Para ejecutar el ejercicio, lanzar el fichero "Ejercicio1.py" en un intérprete de Python
 Una vez cargado, basta con escribir el método "getTipoDeNumeros" pasando como parámetro una lista de números. 
 Ejemplo de prueba:
 
 >>> getTipoDeNumeros([1,2,3,4,5,6,7,8,9,10])
+
 Lista de números de entrada: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
 El número 1 es defectivo
 El número 2 es defectivo
 El número 3 es defectivo
@@ -39,20 +44,26 @@ Ejercicio 2
 ############
 
 1. Entorno
+
 - HTML
 - JavaScript
 - JQuery
 
 2. Librerias externas utilizadas:
+
 - jQuery 3.4.1: uso de las funciones y Ajax
 - CanvasJS: uso de gráficos
  
 3. Árbol de fichieros del ejercicio
+
 \index.html
+
 \js
+
 	\util
 		\jquery-3.4.1.min.js
 		\canvasjs.min
+		
 	\line_chart_handler.js
 	\main.js
 	\pie_chart_handler.js
@@ -88,7 +99,9 @@ Ejercicio 2
 	Método para iniciar y actualizar una estructura de datos Map que almacene la información de las tres fuentes. 
 	
 	La estructura de datos tendrá la forma siguiente:
+	
 		- Key: Formada por cada categoría encontrada en los datos
+		
 		- Value: Formado por un array de objetos que contendrán los valores fecha en formato "human friendly", valor y fecha en milisegundos, es decir de la forma siguiente:
 		{x:date, y:value, d:milliseconds}
 		
