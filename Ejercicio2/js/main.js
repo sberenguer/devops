@@ -36,7 +36,7 @@ $(function () {
         return text.match(REG_EX_CATEGORY)[1];
     }
     
-    /* Custom method for sorting an array of objects by the element "d" (date in milliseconds)    */
+    /* Custom method to sort an array of objects by the element "d" (date in milliseconds) using the native array.sort() javascript method */
     function sortSourcesMapByDate(){        
         sourcesMap.forEach(function(value, key, map){
            value.sort(function(a, b){
@@ -46,7 +46,7 @@ $(function () {
     }    
     
     /* 
-        Method for updating the map of sources while reading the data .
+        Method to update the map of sources while reading the data .
         @params: 
             date:  date in milliseconds
             cat:   category as key
@@ -86,8 +86,8 @@ $(function () {
     }
        
     /*
-        Method to read all the data sent by the API, differentiating them as each of them one returns 
-        different type of elements so we have to access data in a specific way
+        Method to read all the data sent by the API, differentiating them as each of them returns 
+        different types of elements so we have to access data in a specific way
         API 1: [{"d":1435708800000, "cat":"cat 1", "value":10}]
         API 2: [{"myDate": "2015-06-02", "categ": "CAT 1","val": 40}]
         API 3: [{"raw": "9OHbc9 O1 WHTxiBPa  2015-07-02 XF 5xhcx15DD T #CAT 1#","val": 40}]
